@@ -6,6 +6,7 @@ contract Room {
         address host;
         string title;
         uint price;
+        string imgURL;
         bool isRegisted;
     }
 
@@ -18,16 +19,16 @@ contract Room {
     constructor() public{
 
     }
-
-
+    
     function roomCount() public view returns (uint) {
         return roomByIndex.length;
     }
 
-    function registRoom(string _title, uint _price) public{
+    function registRoom(string _title, uint _price, string _imgURL) public{
         RoomInfo storage room = rooms[msg.sender];
         room.title = _title;
         room.price = _price;
+        room.imgURL = _imgURL;
         room.host = msg.sender;
 
         if (!room.isRegisted) {
@@ -54,6 +55,4 @@ contract Room {
     function myAccount() public view returns(address){
         return msg.sender;
     }
-
-
 }
