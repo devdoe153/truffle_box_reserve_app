@@ -106,7 +106,7 @@ class App extends Component {
     }
 
     async getRoomForHost(host) {
-        await this.reservationInstance.rooms(host);
+        return await this.reservationInstance.rooms(host);
     }
 
     // reservation
