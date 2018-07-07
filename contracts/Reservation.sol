@@ -45,6 +45,14 @@ contract Reservation is Room, Reputation {
         reservation.state = ReservationState.CheckedIn;
         reservation.duration = _duration;
 
+        /*        // approve delegatecall
+                require(address(temaToken).delegatecall(
+                    bytes4(keccak256("approve(address,uint256)")),
+                    this,
+                    reservation.totalPrice
+                )); */
+
+
         emit NewReserve(_host, guest, _from, _duration);
     }
 
@@ -56,8 +64,8 @@ contract Reservation is Room, Reputation {
         reservation.state = ReservationState.CheckedOut;
         // 평판 작성
         setHostReputation(reservation.host, _comment, _grade);
-        /*        // 평판 작성 보상
-                temaToken.transferFrom(this, msg.sender, reward);*/
+        // 평판 작성 보상
+        temaToken.transfer(msg.sender, reward);
     }
 
     function claim(address _from, string _comment, uint8 _grade) public {
@@ -68,7 +76,7 @@ contract Reservation is Room, Reputation {
         temaToken.transferFrom(_from, msg.sender, reservation.totalPrice);
         // 평판 작성
         setGuestReputation(_from, _comment, _grade);
-        /*        // 평판 작성 보상
-                temaToken.transferFrom(this, msg.sender, reward);*/
+        // 평판 작성 보상
+        temaToken.transfer(msg.sender, reward);
     }
 }
