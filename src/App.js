@@ -40,6 +40,11 @@ class App extends Component {
             })
     }
 
+    helloFn(instance, param){
+        console.log(param);
+
+    }
+
     instantiateContract() {
         /*
          * SMART CONTRACT EXAMPLE
@@ -60,15 +65,17 @@ class App extends Component {
         reservation.setProvider(this.state.web3.currentProvider);
 
         // Declaring this for later so we can chain functions on SimpleStorage.
-        var simpleStorageInstance
-        var reservationInstance;
+        let simpleStorageInstance
+        let reservationInstance;
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
             this.state.web3.eth.defaultAccount = accounts[0];
             var reservationInstance = await reservation.deployed();
 
-            // await reservationInstance.registRoom("hello", 300, {gas: 300000});
+            this.helloFn(reservationInstance, "bye");
+
+            await reservationInstance.registRoom("hello", 300, {gas: 300000});
 
             var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
             var roomList = [];
@@ -77,10 +84,14 @@ class App extends Component {
                 // console.log("room", i, room);
                 roomList.push(room);
             }
+            this.setState({
+                roomList1: roomList
+            })
         })
     }
 
     render() {
+        console.log(this.state.roomList1);
         return (
             <div className="App">
                 <nav className="navbar pure-menu pure-menu-horizontal">
