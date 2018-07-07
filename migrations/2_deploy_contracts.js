@@ -2,13 +2,14 @@
 var Reservation = artifacts.require("./Reservation.sol");
 var Room = artifacts.require("./Room.sol");
 var TemaToken = artifacts.require("./TemaToken.sol");
+var TemaTokenMarket = artifacts.require("./TemaTokenMarket.sol");
 var SimpleStorage = artifacts.require("./SimpleStorage.sol");
 
 
 
 
 
-module.exports = function(deployer) {
+module.exports = function(deployer, network, accounts) {
     deployer.deploy(SimpleStorage);
     //async operation, returns an addres
     deployer.deploy(TemaToken).then(() => {
@@ -20,6 +21,7 @@ module.exports = function(deployer) {
          * deployer.deploy(Reservation, arg1, arg2, ...argn)
          */
         deployer.deploy(Reservation,TemaToken.address);
+        deployer.deploy(TemaTokenMarket, 1, accounts[0], TemaToken.address);
     });
 
 

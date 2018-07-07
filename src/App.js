@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import TemaToken from '../build/contracts/TemaToken.json'
+import TemaTokenMarket from '../build/contracts/TemaTokenMarket.json'
 import Reservation from '../build/contracts/Reservation.json'
 import getWeb3 from './utils/getWeb3'
 
@@ -41,32 +43,29 @@ class App extends Component {
             })
     }
 
-    temaTokenInstance;
-    reservationInstance;
-
     instantiateContract() {
         const contract = require('truffle-contract')
+        const temaToken = contract(TemaToken);
+        const temaTokenMarket = contract(TemaTokenMarket);
         const reservation = contract(Reservation);
+        temaTokenMarket.setProvider(this.state.web3.currentProvider);
+        temaToken.setProvider(this.state.web3.currentProvider);
         reservation.setProvider(this.state.web3.currentProvider);
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
             this.state.web3.eth.defaultAccount = accounts[5];
             var reservationInstance = await reservation.deployed();
+            this.reservationInstance = reservationInstance;
+            this.temaTokenInstance = await temaToken.deployed();
+            this.temaTokenMarketInstance = await temaTokenMarket.deployed();
+
+            console.log("token owner", await this.temaTokenInstance.owner());
+            this.temaTokenInstance.transferOwnership(this.temaTokenMarketInstance.address);
+            console.log("token owner", await this.temaTokenInstance.owner());
 
 
-            var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
-            var roomList = [];
-            for(var i = 0; i < roomCount; i++) {
-                var room = await reservationInstance.roomByIndex(i);
-                // console.log("room", i, room);
-                roomList.push(room);
-            }
-
-            let obj1 = await reservationInstance.reserves(accounts[2])
-            console.log(obj1);
-
-
+            var roomList = await this.getRoomList();
             this.setState({
                 roomList1: roomList,
                 accountList: accounts,
@@ -74,18 +73,17 @@ class App extends Component {
                 "reservationInstance": reservationInstance
             })
         })
-
-
-        // console.log(this.state.accountList[1]);
-
-        // this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
-        // this.getReservationForGuest(this.state.accountList[0]);
-
     }
 
-    getRoomList() {
-        console.log(this.state);
-        var roomCount = this.state.reservationInstance.roomCount().then(r => r.toNumber());
+    // rooms
+    async registRoom(title, pricePerDay) {
+        await this.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
+        this.setState({"hello":"nello"});
+        this.render();
+    }
+
+    async getRoomList() {
+        var roomCount = await this.reservationInstance.roomCount().then(r => r.toNumber());
         var roomList = [];
         for(var i = 0; i < roomCount; i++) {
             var room = this.state.reservationInstance.roomByIndex(i);
@@ -103,7 +101,10 @@ class App extends Component {
 
     // reservation
     async makeReservation(host, from, duration) {
-        await this.reservationInstance.reserve(host, from, duration);
+        await this.reservationInstance.reserve(host, from, duration, {gas: 300000});
+        const reservation = await this.getReservationForGuest(this.state.web3.eth.defaultAccount);
+        const totalPrice = reservation[3];
+        await this.temaTokenInstance.approve(this.reservationInstance.address, totalPrice, {gas: 300000});
     }
 
     async getReservationForGuest(guest) {
@@ -118,6 +119,15 @@ class App extends Component {
 
     async claim(from, comment, grader) {
         await this.reservationInstance.claim(from, comment, grader);
+    }
+
+    // token
+    async getBalance(address) {
+        return await this.temaTokenInstance.balanceOf(address);
+    }
+
+    async buyToken(address, pay) {
+        return await this.temaTokenMarketInstance.sendTransaction({gas: 300000, value: pay});
     }
 
     render() {
