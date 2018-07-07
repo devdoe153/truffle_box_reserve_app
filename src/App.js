@@ -40,11 +40,6 @@ class App extends Component {
             })
     }
 
-    helloFn(instance, param){
-        console.log(param);
-
-    }
-
     temaTokenInstance;
     reservationInstance;
 
@@ -76,8 +71,6 @@ class App extends Component {
             var reservationInstance = await reservation.deployed();
             this.reservationInstance = reservationInstance;
 
-            this.helloFn(reservationInstance, "bye");
-
             // await reservationInstance.registRoom("hello", 300, {gas: 300000});
 
             var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
@@ -88,17 +81,21 @@ class App extends Component {
                 roomList.push(room);
             }
             this.setState({
-                roomList1: roomList
+                roomList1: roomList,
+                accountList: accounts
             })
 
-            this.makeReservation(accounts[0], "2018-01-01", 3);
-            this.getReservationForGuest(accounts[0]);
+            console.log(this.state.accountList);
+
+            this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
+            this.getReservationForGuest(this.state.accountList[0]);
         })
     }
 
     // rooms
     async registRoom(title, pricePerDay) {
         await this.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
+        this.setState({"hello":"nello"});
     }
 
     async getRoomList() {
@@ -137,6 +134,11 @@ class App extends Component {
         await this.reservationInstance.claim(from, comment, grader);
     }
 
+    roomClickHandler(){
+        console.log("click room");
+        this.registRoom("welcome2", 100);
+    }
+
     render() {
         console.log(this.state.roomList1);
         return (
@@ -153,6 +155,7 @@ class App extends Component {
                             <h2>Smart Contract Example</h2>
                             <RoomListBox roomList={this.state.roomList1} name="hello"/>
                             <RoomBox/>
+                            <button onClick={() => this.roomClickHandler()}>submit</button>
                             <p>If your contracts compiled and migrated successfully, below will show a stored value of 5
                                 (by default).</p>
                             <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
