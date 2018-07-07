@@ -4,6 +4,7 @@ import getWeb3 from './utils/getWeb3'
 
 import RoomBox from './components/RoomBox';
 import RoomListBox from './components/RoomListBox';
+import ReserveListBox from './components/ReserveListBox';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -61,6 +62,11 @@ class App extends Component {
                 // console.log("room", i, room);
                 roomList.push(room);
             }
+
+            let obj1 = await reservationInstance.reserves(accounts[2])
+            console.log(obj1);
+
+
             this.setState({
                 roomList1: roomList,
                 accountList: accounts,
@@ -75,14 +81,6 @@ class App extends Component {
         // this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
         // this.getReservationForGuest(this.state.accountList[0]);
 
-    }
-
-    // rooms
-    registRoom(title, pricePerDay) {
-        console.log("here----");
-        this.state.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
-        this.setState({"hello":"nello"});
-        this.render();
     }
 
     getRoomList() {
@@ -138,6 +136,10 @@ class App extends Component {
                             <h3>방목록 보기</h3>
                             <RoomListBox roomList={this.state.roomList1} name="hello"/>
                             <RoomBox reservationInstance={this.state.reservationInstance}/>
+
+                            <h3>예약 목록 보기</h3>
+                            <ReserveListBox roomList={this.state.roomList1} name="hello"/>
+
 
                         </div>
                     </div>
