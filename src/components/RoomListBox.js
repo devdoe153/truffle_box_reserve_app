@@ -1,6 +1,7 @@
 import React from "react";
 
 class RoomListBox extends React.Component {
+
     render() {
         let list = [];
         if(this.props.roomList != null){

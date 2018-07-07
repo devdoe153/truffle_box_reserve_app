@@ -50,7 +50,7 @@ class App extends Component {
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
-            this.state.web3.eth.defaultAccount = accounts[4];
+            this.state.web3.eth.defaultAccount = accounts[5];
             var reservationInstance = await reservation.deployed();
 
 
@@ -122,11 +122,6 @@ class App extends Component {
         await this.reservationInstance.claim(from, comment, grader);
     }
 
-    roomClickHandler(){
-        console.log("click here");
-        this.state.reservationInstance.registRoom('title4', 100, {gas: 300000});
-    }
-
     render() {
         return (
             <div className="App">
@@ -140,14 +135,10 @@ class App extends Component {
                             <h1>Tema Token!</h1>
                             <p>테마 토큰 호텔 예약 D앱 입니다.</p>
                             <p>defaultAccount : {this.state.defaultAccount}</p>
-                            <h2>Smart Contract Example</h2>
+                            <h3>방목록 보기</h3>
                             <RoomListBox roomList={this.state.roomList1} name="hello"/>
                             <RoomBox reservationInstance={this.state.reservationInstance}/>
-                            <button onClick={() => this.roomClickHandler()}>submit</button>
-                            <p>If your contracts compiled and migrated successfully, below will show a stored value of 5
-                                (by default).</p>
-                            <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-                            <p>The stored value is: {this.state.storageValue}</p>
+
                         </div>
                     </div>
                 </main>
