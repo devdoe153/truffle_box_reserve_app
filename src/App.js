@@ -45,6 +45,9 @@ class App extends Component {
 
     }
 
+    temaTokenInstance;
+    reservationInstance;
+
     instantiateContract() {
         /*
          * SMART CONTRACT EXAMPLE
@@ -66,12 +69,12 @@ class App extends Component {
 
         // Declaring this for later so we can chain functions on SimpleStorage.
         let simpleStorageInstance
-        let reservationInstance;
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
             this.state.web3.eth.defaultAccount = accounts[0];
             var reservationInstance = await reservation.deployed();
+            this.reservationInstance = reservationInstance;
 
             this.helloFn(reservationInstance, "bye");
 
@@ -87,7 +90,23 @@ class App extends Component {
             this.setState({
                 roomList1: roomList
             })
+
+            this.makeReservation(accounts[0], "2018-01-01", 3);
+            this.getReservationForGuest(accounts[0]);
         })
+    }
+
+    // rooms
+
+
+    // reservation
+    async makeReservation(host, from, duration) {
+        await this.reservationInstance.reserve(host, from, duration);
+    }
+
+    async getReservationForGuest(guest) {
+        const reservation = await this.reservationInstance.reserves(guest);
+        return reservation;
     }
 
     render() {
