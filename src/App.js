@@ -97,7 +97,26 @@ class App extends Component {
     }
 
     // rooms
+    async registRoom(title, pricePerDay) {
+        await this.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
+    }
 
+    async getRoomList() {
+        var roomCount = await this.reservationInstance.roomCount().then(r => r.toNumber());
+        var roomList = [];
+        for(var i = 0; i < roomCount; i++) {
+            var room = await this.reservationInstance.roomByIndex(i);
+            roomList.push(room);
+        }
+        this.setState({
+            roomList1: roomList
+        });
+        return roomList;
+    }
+
+    async getRoomForHost(host) {
+        await this.reservationInstance.rooms(host);
+    }
 
     // reservation
     async makeReservation(host, from, duration) {
@@ -107,6 +126,15 @@ class App extends Component {
     async getReservationForGuest(guest) {
         const reservation = await this.reservationInstance.reserves(guest);
         return reservation;
+    }
+
+    async checkout(comment, grade) {
+        await this.reservationInstance.checkout(comment, grade);
+    }
+
+
+    async claim(from, comment, grader) {
+        await this.reservationInstance.claim(from, comment, grader);
     }
 
     render() {
