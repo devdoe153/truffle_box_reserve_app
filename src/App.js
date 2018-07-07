@@ -4,6 +4,7 @@ import TemaTokenContract from '../build/contracts/TemaToken.json'
 import getWeb3 from './utils/getWeb3'
 
 import RoomBox from './components/RoomBox';
+import RoomListBox from './components/RoomListBox';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -70,7 +71,10 @@ class App extends Component {
                 // Update state with the result.
                 return this.setState({storageValue: result.c[0]})
             })
-        })
+        });
+
+
+
     }
 
     render() {
@@ -86,6 +90,7 @@ class App extends Component {
                             <h1>Tema Token!</h1>
                             <p>테마 토큰 호텔 예약 D앱 입니다.</p>
                             <h2>Smart Contract Example</h2>
+                            <RoomListBox name="hello"/>
                             <RoomBox/>
                             <p>If your contracts compiled and migrated successfully, below will show a stored value of 5
                                 (by default).</p>
