@@ -2,16 +2,16 @@ pragma solidity ^0.4.24;
 
 contract Room {
 
-
-    mapping(address => RoomInfo) public rooms;
-
-    RoomInfo[] public roomByIndex;
-
     struct RoomInfo {
         address host;
         string title;
         uint price;
+        bool isRegisted;
     }
+
+    mapping(address => RoomInfo) public rooms;
+
+    RoomInfo[] public roomByIndex;
 
     event RegistRoom(address _address, string _title, uint price);
 
@@ -30,7 +30,11 @@ contract Room {
         room.price = _price;
         room.host = msg.sender;
 
-        roomByIndex.push(room);
+        if (!room.isRegisted) {
+            roomByIndex.push(room);
+        }
+
+        room.isRegisted = true;
 
         emit RegistRoom(msg.sender, _title, _price);
     }
