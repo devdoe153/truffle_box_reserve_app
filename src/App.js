@@ -1,6 +1,4 @@
 import React, {Component} from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import TemaTokenContract from '../build/contracts/TemaToken.json'
 import Reservation from '../build/contracts/Reservation.json'
 import getWeb3 from './utils/getWeb3'
 
@@ -18,7 +16,9 @@ class App extends Component {
 
         this.state = {
             storageValue: 0,
-            web3: null
+            web3: null,
+            "defaultAccount":"",
+            "reservationInstance": null
         }
     }
 
@@ -44,29 +44,14 @@ class App extends Component {
     reservationInstance;
 
     instantiateContract() {
-        /*
-         * SMART CONTRACT EXAMPLE
-         *
-         * Normally these functions would be called in the context of a
-         * state management library, but for convenience I've placed them here.
-         */
-
         const contract = require('truffle-contract')
-        const simpleStorage = contract(SimpleStorageContract)
-        const temaToken = contract(TemaTokenContract)
         const reservation = contract(Reservation);
-        simpleStorage.setProvider(this.state.web3.currentProvider)
         reservation.setProvider(this.state.web3.currentProvider);
-
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
-            this.state.web3.eth.defaultAccount = accounts[0];
+            this.state.web3.eth.defaultAccount = accounts[2];
             var reservationInstance = await reservation.deployed();
-            this.reservationInstance = reservationInstance;
-
-            // await reservationInstance.registRoom("hello", 300, {gas: 300000});
-
 
             var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
             var roomList = [];
@@ -77,32 +62,39 @@ class App extends Component {
             }
             this.setState({
                 roomList1: roomList,
-                accountList: accounts
+                accountList: accounts,
+                "defaultAccount":accounts[2],
+                "reservationInstance": reservationInstance
             })
         })
 
-        this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
-        this.getReservationForGuest(this.state.accountList[0]);
+        // console.log(this.state.accountList[1]);
+
+        // this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
+        // this.getReservationForGuest(this.state.accountList[0]);
+
     }
 
     // rooms
-    async registRoom(title, pricePerDay) {
-        await this.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
+    registRoom(title, pricePerDay) {
+        console.log("here----");
+        this.state.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
         this.setState({"hello":"nello"});
         this.render();
     }
 
-    async getRoomList() {
-        var roomCount = await this.reservationInstance.roomCount().then(r => r.toNumber());
+    getRoomList() {
+        console.log(this.state);
+        var roomCount = this.state.reservationInstance.roomCount().then(r => r.toNumber());
         var roomList = [];
         for(var i = 0; i < roomCount; i++) {
-            var room = await this.reservationInstance.roomByIndex(i);
+            var room = this.state.reservationInstance.roomByIndex(i);
             roomList.push(room);
         }
+        console.log(roomList);
         this.setState({
             roomList1: roomList
         });
-        return roomList;
     }
 
     async getRoomForHost(host) {
@@ -129,16 +121,16 @@ class App extends Component {
     }
 
     roomClickHandler(){
-        console.log("click room");
-        this.registRoom("welcome2", 100);
+        console.log("click here");
+        console.log(this.state);
+        this.state.reservationInstance.RegistRoom('title3', 100, {gas: 300000});
     }
 
     render() {
-        console.log(this.state.roomList1);
         return (
             <div className="App">
                 <nav className="navbar pure-menu pure-menu-horizontal">
-                    <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
+                    <a href="#" className="pure-menu-heading pure-menu-link">Tema 토큰</a>
                 </nav>
 
                 <main className="container">
@@ -146,9 +138,10 @@ class App extends Component {
                         <div className="pure-u-1-1">
                             <h1>Tema Token!</h1>
                             <p>테마 토큰 호텔 예약 D앱 입니다.</p>
+                            <p>defaultAccount : {this.state.defaultAccount}</p>
                             <h2>Smart Contract Example</h2>
                             <RoomListBox roomList={this.state.roomList1} name="hello"/>
-                            <RoomBox/>
+                            <RoomBox roomClickHandler={this.roomClickHandler}/>
                             <button onClick={() => this.roomClickHandler()}>submit</button>
                             <p>If your contracts compiled and migrated successfully, below will show a stored value of 5
                                 (by default).</p>
