@@ -73,6 +73,7 @@ class App extends Component {
 
             // await reservationInstance.registRoom("hello", 300, {gas: 300000});
 
+
             var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
             var roomList = [];
             for(var i = 0; i < roomCount; i++) {
@@ -84,18 +85,17 @@ class App extends Component {
                 roomList1: roomList,
                 accountList: accounts
             })
-
-            console.log(this.state.accountList);
-
-            this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
-            this.getReservationForGuest(this.state.accountList[0]);
         })
+
+        this.makeReservation(this.state.accountList[0], "2018-01-01", 3);
+        this.getReservationForGuest(this.state.accountList[0]);
     }
 
     // rooms
     async registRoom(title, pricePerDay) {
         await this.reservationInstance.registRoom(title, pricePerDay, {gas: 300000});
         this.setState({"hello":"nello"});
+        this.render();
     }
 
     async getRoomList() {
