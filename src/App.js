@@ -52,18 +52,12 @@ class App extends Component {
          */
 
         const contract = require('truffle-contract')
-        console.log(this.state.web3);
         const simpleStorage = contract(SimpleStorageContract)
         const temaToken = contract(TemaTokenContract)
         const reservation = contract(Reservation);
-        console.log(temaToken);
-        console.log(simpleStorage);
-        console.log(reservation);
         simpleStorage.setProvider(this.state.web3.currentProvider)
         reservation.setProvider(this.state.web3.currentProvider);
 
-        // Declaring this for later so we can chain functions on SimpleStorage.
-        let simpleStorageInstance
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
