@@ -2,11 +2,11 @@ import React from "react";
 
 class RoomListBox extends React.Component {
     render() {
-
-        const list = [
-            {"name":"krk", "price":100},
-            {"name":"krk2", "price":100}
-        ];
+        let list = [];
+        if(this.props.roomList != null){
+            list = this.props.roomList;
+        }
+        console.log(this.props)
         return(
             <table>
                 <th>
@@ -17,21 +17,24 @@ class RoomListBox extends React.Component {
                         방가격
                     </td>
                 </th>
-                {list.map((item)=><RoomItem room={item}/>)}
-
+                <tbody>
+                    {list.map((arItem)=><RoomItem room={arItem}/>)}
+                </tbody>
             </table>
         )
     }
 }
 
 function RoomItem(props) {
+
+    const price = props.room[2].toNumber();
     return (
         <tr>
             <td>
-                {props.room.name}
+                {props.room[1]}
             </td>
             <td>
-                {props.room.price}
+                {price}
             </td>
         </tr>
 

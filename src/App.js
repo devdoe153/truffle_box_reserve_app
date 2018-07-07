@@ -78,7 +78,7 @@ class App extends Component {
 
             this.helloFn(reservationInstance, "bye");
 
-            await reservationInstance.registRoom("hello", 300, {gas: 300000});
+            // await reservationInstance.registRoom("hello", 300, {gas: 300000});
 
             var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
             var roomList = [];
@@ -123,7 +123,7 @@ class App extends Component {
                             <h1>Tema Token!</h1>
                             <p>테마 토큰 호텔 예약 D앱 입니다.</p>
                             <h2>Smart Contract Example</h2>
-                            <RoomListBox name="hello"/>
+                            <RoomListBox roomList={this.state.roomList1} name="hello"/>
                             <RoomBox/>
                             <p>If your contracts compiled and migrated successfully, below will show a stored value of 5
                                 (by default).</p>
