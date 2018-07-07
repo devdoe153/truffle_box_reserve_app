@@ -7,13 +7,14 @@ import getWeb3 from './utils/getWeb3'
 import RoomBox from './components/RoomBox';
 import RoomListBox from './components/RoomListBox';
 import ReserveListBox from './components/ReserveListBox';
+import AccountListBox from './components/AccountListBox';
 
 import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
-class App extends Component {
+class App extends React.Component {
     constructor(props) {
         super(props)
 
@@ -23,6 +24,10 @@ class App extends Component {
             "defaultAccount":"",
             "reservationInstance": null
         }
+
+        this.handleChangeDefaultAccount = this.handleChangeDefaultAccount.bind(this);
+
+
     }
 
     componentWillMount() {
@@ -61,14 +66,19 @@ class App extends Component {
             this.temaTokenMarketInstance = await temaTokenMarket.deployed();
 
             if (await this.temaTokenInstance.owner() !== this.temaTokenMarketInstance.address) {
+                console.log(this.temaTokenMarketInstance.address);
                 this.temaTokenInstance.transferOwnership(this.temaTokenMarketInstance.address);
             }
+
+            let defaultAccount = accounts[2];
+            // this.temaTokenInstance.balanceOf(defaultAccount)
+            //     .then(balance=>console.log("bal:",balance));
 
             var roomList = await this.getRoomList();
             this.setState({
                 roomList1: roomList,
                 accountList: accounts,
-                "defaultAccount":accounts[2],
+                "defaultAccount":defaultAccount,
                 "reservationInstance": reservationInstance
             })
         })
@@ -129,6 +139,9 @@ class App extends Component {
         return await this.temaTokenMarketInstance.sendTransaction({gas: 300000, value: pay});
     }
 
+    handleChangeDefaultAccount(account){
+        console.log("acct:", account);
+    }
     render() {
         return (
             <div className="App">
@@ -141,7 +154,7 @@ class App extends Component {
                         <div className="pure-u-1-1">
                             <h1>Tema Token!</h1>
                             <p>테마 토큰 호텔 예약 D앱 입니다.</p>
-                            <p>defaultAccount : {this.state.defaultAccount}</p>
+                            <AccountListBox handleChangeDefaultAccount={this.handleChangeDefaultAccount} accountList={this.state.accountList}/>
                             <h3>방목록 보기</h3>
                             <RoomListBox roomList={this.state.roomList1} name="hello"/>
                             <RoomBox reservationInstance={this.state.reservationInstance}/>

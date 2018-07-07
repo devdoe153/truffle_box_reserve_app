@@ -1,25 +1,24 @@
 import React from "react";
 
-class ReserveListBox extends React.Component {
+class RoomListBox extends React.Component {
 
     render() {
         let list = [];
         if(this.props.roomList != null){
-            list = this.props.roomList;
+            //list = this.props.roomList;
         }
-        console.log(this.props)
         return(
             <table>
                 <thead>
                     <tr>
                         <th>
+                            host
+                        </th>
+                        <th>
                             방이름
                         </th>
                         <th>
-                            방가격
-                        </th>
-                        <th>
-                            account
+                            몇일동안
                         </th>
                     </tr>
                 </thead>
@@ -50,4 +49,4 @@ function RoomItem(props) {
     )
 }
 
-export default ReserveListBox
+export default RoomListBox

@@ -19,7 +19,6 @@ class RoomBox extends React.Component {
         this.setState({roomPrice: event.target.value});
     }
     render() {
-        console.log(this.props);
         return(
             <div>
                 방이름:<input type="text" name="name" value={this.state.roomName} onChange={this.handleChangeName.bind(this)}/>
