@@ -50,8 +50,9 @@ class App extends Component {
 
         // Get accounts.
         this.state.web3.eth.getAccounts( async (error, accounts) => {
-            this.state.web3.eth.defaultAccount = accounts[2];
+            this.state.web3.eth.defaultAccount = accounts[4];
             var reservationInstance = await reservation.deployed();
+
 
             var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
             var roomList = [];
@@ -67,6 +68,7 @@ class App extends Component {
                 "reservationInstance": reservationInstance
             })
         })
+
 
         // console.log(this.state.accountList[1]);
 
@@ -122,8 +124,7 @@ class App extends Component {
 
     roomClickHandler(){
         console.log("click here");
-        console.log(this.state);
-        this.state.reservationInstance.RegistRoom('title3', 100, {gas: 300000});
+        this.state.reservationInstance.registRoom('title4', 100, {gas: 300000});
     }
 
     render() {
@@ -141,7 +142,7 @@ class App extends Component {
                             <p>defaultAccount : {this.state.defaultAccount}</p>
                             <h2>Smart Contract Example</h2>
                             <RoomListBox roomList={this.state.roomList1} name="hello"/>
-                            <RoomBox roomClickHandler={this.roomClickHandler}/>
+                            <RoomBox reservationInstance={this.state.reservationInstance}/>
                             <button onClick={() => this.roomClickHandler()}>submit</button>
                             <p>If your contracts compiled and migrated successfully, below will show a stored value of 5
                                 (by default).</p>
