@@ -2,9 +2,14 @@
 var Reservation = artifacts.require("./Reservation.sol");
 var Room = artifacts.require("./Room.sol");
 var TemaToken = artifacts.require("./TemaToken.sol");
+var SimpleStorage = artifacts.require("./SimpleStorage.sol");
+
+
+
 
 
 module.exports = function(deployer) {
+    deployer.deploy(SimpleStorage);
     //async operation, returns an addres
     deployer.deploy(TemaToken).then(() => {
         /**
