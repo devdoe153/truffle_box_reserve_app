@@ -60,10 +60,9 @@ class App extends Component {
             this.temaTokenInstance = await temaToken.deployed();
             this.temaTokenMarketInstance = await temaTokenMarket.deployed();
 
-            console.log("token owner", await this.temaTokenInstance.owner());
-            this.temaTokenInstance.transferOwnership(this.temaTokenMarketInstance.address);
-            console.log("token owner", await this.temaTokenInstance.owner());
-
+            if (await this.temaTokenInstance.owner() !== this.temaTokenMarketInstance.address) {
+                this.temaTokenInstance.transferOwnership(this.temaTokenMarketInstance.address);
+            }
 
             var roomList = await this.getRoomList();
             this.setState({
