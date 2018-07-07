@@ -64,22 +64,20 @@ class App extends Component {
         var reservationInstance;
 
         // Get accounts.
-        this.state.web3.eth.getAccounts((error, accounts) => {
-            simpleStorage.deployed().then((instance) => {
-                simpleStorageInstance = instance
-                // Stores a given value, 5 by default.
-                return simpleStorageInstance.set(5, {from: accounts[0]})
-            }).then((result) => {
-                // Get the value from the contract to prove it worked.
-                return simpleStorageInstance.get.call(accounts[0])
-            }).then((result) => {
-                // Update state with the result.
-                return this.setState({storageValue: result.c[0]})
-            })
-        });
+        this.state.web3.eth.getAccounts( async (error, accounts) => {
+            this.state.web3.eth.defaultAccount = accounts[0];
+            var reservationInstance = await reservation.deployed();
 
+            // await reservationInstance.registRoom("hello", 300, {gas: 300000});
 
-
+            var roomCount = await reservationInstance.roomCount().then(r => r.toNumber());
+            var roomList = [];
+            for(var i = 0; i < roomCount; i++) {
+                var room = await reservationInstance.roomByIndex(i);
+                // console.log("room", i, room);
+                roomList.push(room);
+            }
+        })
     }
 
     render() {
