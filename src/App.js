@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import TemaTokenContract from '../build/contracts/TemaToken.json'
+import Reservation from '../build/contracts/Reservation.json'
 import getWeb3 from './utils/getWeb3'
 
 import RoomBox from './components/RoomBox';
@@ -50,12 +51,16 @@ class App extends Component {
         console.log(this.state.web3);
         const simpleStorage = contract(SimpleStorageContract)
         const temaToken = contract(TemaTokenContract)
+        const reservation = contract(Reservation);
         console.log(temaToken);
         console.log(simpleStorage);
+        console.log(reservation);
         simpleStorage.setProvider(this.state.web3.currentProvider)
+        reservation.setProvider(this.state.web3.currentProvider);
 
         // Declaring this for later so we can chain functions on SimpleStorage.
         var simpleStorageInstance
+        var reservationInstance;
 
         // Get accounts.
         this.state.web3.eth.getAccounts((error, accounts) => {
