@@ -1,14 +1,5 @@
-# 방 예약하기
-
-### ganache-gui
-개발, 테스트용 넷 만들어주는 .dmg
-
-https://truffleframework.com/ganache
-
-### test방법
-1. ganache를 실행합니다.
-2. truffle test 를 실행 합니다.
-
+# 발표 자료
+[발표 자료 보기](https://docs.google.com/presentation/d/13yYHA_mvW8gjZxun7_f_gAqL6VB6cQj9lCJAasN_PVY/edit?usp=sharing)
 
 # 시연 시나리오
 
