@@ -1,3 +1,6 @@
+# 블록 파티 2기 기사
+[기사 보기](http://m.newsworks.co.kr/news/articleView.html?idxno=199372#_enliple)
+
 # 발표 자료
 [발표 자료 보기](https://docs.google.com/presentation/d/13yYHA_mvW8gjZxun7_f_gAqL6VB6cQj9lCJAasN_PVY/edit?usp=sharing)
 
